@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿De qué país eres? - País Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #4682B4 50%, #1E90FF 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><defs><linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:%2387CEEB;stop-opacity:0.3"/><stop offset="100%" style="stop-color:%234682B4;stop-opacity:0.1"/></linearGradient></defs><rect width="1200" height="800" fill="url(%23skyGrad)"/><g opacity="0.1"><rect x="100" y="400" width="80" height="200" fill="%23333"/><rect x="200" y="350" width="100" height="250" fill="%23444"/><rect x="320" y="380" width="60" height="220" fill="%23333"/><rect x="400" y="320" width="120" height="280" fill="%23555"/><rect x="540" y="360" width="80" height="240" fill="%23333"/><rect x="640" y="300" width="90" height="300" fill="%23444"/><rect x="750" y="340" width="70" height="260" fill="%23333"/><rect x="840" y="290" width="110" height="310" fill="%23555"/><rect x="970" y="370" width="85" height="230" fill="%23444"/></g></svg>');
+            background-size: cover, cover;
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4682B4, #1E90FF, #00BFFF);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(70, 130, 180, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .language-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 30px;
+            padding: 10px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .name-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        
+        .name-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+        }
+        
+        .city-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .city-btn {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 22px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 1.15em;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .city-btn:nth-child(1) {
+            background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+        }
+        
+        .city-btn:nth-child(2) {
+            background: linear-gradient(135deg, #4ECDC4, #44A08D);
+        }
+        
+        .city-btn:nth-child(3) {
+            background: linear-gradient(135deg, #45B7D1, #96C7ED);
+        }
+        
+        .city-btn:nth-child(4) {
+            background: linear-gradient(135deg, #F9CA24, #F0932B);
+        }
+        
+        .city-btn:nth-child(5) {
+            background: linear-gradient(135deg, #6C5CE7, #A29BFE);
+        }
+        
+        .city-btn:nth-child(6) {
+            background: linear-gradient(135deg, #FD79A8, #FDCB6E);
+        }
+        
+        .city-btn:nth-child(7) {
+            background: linear-gradient(135deg, #00B894, #00CEC9);
+        }
+        
+        .city-btn:nth-child(8) {
+            background: linear-gradient(135deg, #E17055, #FDCB6E);
+        }
+        
+        .city-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .city-btn.selected {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            border-color: #FFD700;
+            border-width: 4px;
+        }
+        
+        .city-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5em;
+            color: #FFD700;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .question-display {
+            display: none;
+            background: linear-gradient(135deg, #FFF8DC 0%, #FFEB9C 50%, #FFE135 100%);
+            border: 3px solid #FFD700;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        
+        .question-display.show {
+            display: block;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #e67e22;
+            margin-bottom: 20px;
+        }
+        
+        .answer-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .answer-btn {
+            background: linear-gradient(135deg, #28A745, #20C997);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            min-width: 120px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .answer-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(40, 167, 69, 0.4);
+        }
+        
+        .answer-btn.no {
+            background: linear-gradient(135deg, #DC3545, #E74C3C);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+        
+        .answer-btn.no:hover {
+            box-shadow: 0 12px 25px rgba(220, 53, 69, 0.4);
+        }
+        
+        .result {
+            display: none;
+            background: linear-gradient(135deg, #D1F2EB 0%, #A3E4D7 50%, #76D7C4 100%);
+            border: 3px solid #17A2B8;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(23, 162, 184, 0.2);
+        }
+        
+        .result.show {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            animation: slideIn 0.4s ease;
+        }
+        
+        .result.wrong {
+            background: linear-gradient(135deg, #FADBD8 0%, #F1948A 50%, #EC7063 100%);
+            border-color: #E74C3C;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.2);
+        }
+        
+        .flag-display {
+            flex-shrink: 0;
+        }
+        
+        .flag-img {
+            width: 100px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .result-text {
+            flex-grow: 1;
+        }
+        
+        .result-text h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .result-text h3.correct {
+            color: #155724;
+        }
+        
+        .result-text h3.wrong {
+            color: #721c24;
+        }
+        
+        .result-text p {
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+        
+        .result-text p.correct {
+            color: #155724;
+        }
+        
+        .result-text p.wrong {
+            color: #721c24;
+        }
+        
+        .history {
+            background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 50%, #DEE2E6 100%);
+            border: 2px solid #ADB5BD;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 8px 25px rgba(173, 181, 189, 0.2);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .history-header h2 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .clear-history-btn {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .clear-history-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+        }
+        
+        .history-item {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+            border: 1px solid #E9ECEF;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 18px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .history-flag {
+            width: 50px;
+            height: auto;
+            border-radius: 6px;
+        }
+        
+        .history-content {
+            flex-grow: 1;
+        }
+        
+        .history-date {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .history-text {
+            font-size: 1.1em;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .history-result {
+            font-size: 0.9em;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+        }
+        
+        .history-result.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .history-result.wrong {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .no-history {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .result.show {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .language-btn {
+                position: static;
+                margin-bottom: 20px;
+                display: inline-block;
+            }
+            
+            .answer-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .city-selection {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="language-btn" id="languageBtn">🌐 English</button>
+            <h1 id="mainTitle">¿De qué país eres?</h1>
+            <p id="mainSubtitle">Adivina el país basado en la ciudad</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2 id="nameLabel">¿Cuál es tu nombre?</h2>
+                <input type="text" class="name-input" id="userName" placeholder="Ingresa tu nombre aquí...">
+            </div>
+            
+            <div class="section">
+                <h2 id="cityLabel">Selecciona una ciudad:</h2>
+                <div class="city-selection" id="citySelection">
+                    <button class="city-btn" data-city="nueva york" data-country="eeuu">Nueva York</button>
+                    <button class="city-btn" data-city="bogotá" data-country="colombia">Bogotá</button>
+                    <button class="city-btn" data-city="ontario" data-country="canada">Ontario</button>
+                    <button class="city-btn" data-city="quito" data-country="ecuador">Quito</button>
+                    <button class="city-btn" data-city="madrid" data-country="españa">Madrid</button>
+                    <button class="city-btn" data-city="buenos aires" data-country="argentina">Buenos Aires</button>
+                    <button class="city-btn" data-city="monterrey" data-country="mexico">Monterrey</button>
+                    <button class="city-btn" data-city="brasilia" data-country="brasil">Brasilia</button>
+                </div>
+            </div>
+            
+            <div class="question-display" id="questionDisplay">
+                <div class="question-text" id="questionText"></div>
+                <div class="answer-buttons">
+                    <button class="answer-btn" id="yesBtn">Sí</button>
+                    <button class="answer-btn no" id="noBtn">No</button>
+                </div>
+            </div>
+            
+            <div class="result" id="result">
+                <div class="flag-display">
+                    <img class="flag-img" id="flagImg" src="" alt="">
+                </div>
+                <div class="result-text">
+                    <h3 id="resultTitle"></h3>
+                    <p id="resultText"></p>
+                </div>
+            </div>
+            
+            <div class="history">
+                <div class="history-header">
+                    <h2 id="historyTitle">Historial de Respuestas</h2>
+                    <button class="clear-history-btn" id="clearBtn">🗑️ Limpiar</button>
+                </div>
+                <div id="historyContent">
+                    <div class="no-history" id="noHistory">¡No hay preguntas respondidas aún. ¡Comienza a jugar!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuración de la aplicación
+        const app = {
+            currentLanguage: 'es',
+            selectedCity: null,
+            selectedCountry: null,
+            conversations: JSON.parse(localStorage.getItem('country_quiz_history') || '[]')
+        };
+
+        // Traducciones
+        const translations = {
+            es: {
+                mainTitle: '¿De qué país eres?',
+                mainSubtitle: 'Adivina el país basado en la ciudad',
+                nameLabel: '¿Cuál es tu nombre?',
+                namePlaceholder: 'Ingresa tu nombre aquí...',
+                cityLabel: 'Selecciona una ciudad:',
+                questionTemplate: 'Si eres de {city} entonces eres de {country}?',
+                yesBtn: 'Sí',
+                noBtn: 'No',
+                correctTitle: '¡Correcto!',
+                wrongTitle: '¡Incorrecto!',
+                correctText: '{name}, tienes razón. {city} está en {country}.',
+                wrongText: '{name}, {city} realmente está en {country}.',
+                historyTitle: 'Historial de Respuestas',
+                clearBtn: '🗑️ Limpiar',
+                noHistory: '¡No hay preguntas respondidas aún. ¡Comienza a jugar!',
+                confirmClear: '¿Estás seguro de que quieres limpiar todo el historial?',
+                historyCleared: 'Historial limpiado exitosamente',
+                fillName: 'Por favor ingresa tu nombre',
+                selectCity: 'Por favor selecciona una ciudad',
+                flagAlt: 'Bandera de',
+                correct: 'Correcto',
+                wrong: 'Incorrecto'
+            },
+            en: {
+                mainTitle: 'What country are you from?',
+                mainSubtitle: 'Guess the country based on the city',
+                nameLabel: 'What is your name?',
+                namePlaceholder: 'Enter your name here...',
+                cityLabel: 'Select a city:',
+                questionTemplate: 'If you are from {city} then you are from {country}?',
+                yesBtn: 'Yes',
+                noBtn: 'No',
+                correctTitle: 'Correct!',
+                wrongTitle: 'Incorrect!',
+                correctText: '{name}, you are right. {city} is in {country}.',
+                wrongText: '{name}, {city} is actually in {country}.',
+                historyTitle: 'Answer History',
+                clearBtn: '🗑️ Clear',
+                noHistory: 'No questions answered yet. Start playing!',
+                confirmClear: 'Are you sure you want to clear all history?',
+                historyCleared: 'History cleared successfully',
+                fillName: 'Please enter your name',
+                selectCity: 'Please select a city',
+                flagAlt: 'Flag of',
+                correct: 'Correct',
+                wrong: 'Wrong'
+            }
+        };
+
+        // Mapeo de ciudades a países y códigos de bandera
+        const cityCountryMap = {
+            'nueva york': { country: 'eeuu', countryCode: 'us', names: { es: 'Estados Unidos', en: 'United States' } },
+            'new york': { country: 'eeuu', countryCode: 'us', names: { es: 'Estados Unidos', en: 'United States' } },
+            'bogotá': { country: 'colombia', countryCode: 'co', names: { es: 'Colombia', en: 'Colombia' } },
+            'bogota': { country: 'colombia', countryCode: 'co', names: { es: 'Colombia', en: 'Colombia' } },
+            'ontario': { country: 'canada', countryCode: 'ca', names: { es: 'Canadá', en: 'Canada' } },
+            'quito': { country: 'ecuador', countryCode: 'ec', names: { es: 'Ecuador', en: 'Ecuador' } },
+            'madrid': { country: 'españa', countryCode: 'es', names: { es: 'España', en: 'Spain' } },
+            'buenos aires': { country: 'argentina', countryCode: 'ar', names: { es: 'Argentina', en: 'Argentina' } },
+            'monterrey': { country: 'mexico', countryCode: 'mx', names: { es: 'México', en: 'Mexico' } },
+            'brasilia': { country: 'brasil', countryCode: 'br', names: { es: 'Brasil', en: 'Brazil' } }
+        };
+
+        // Funciones principales
+        function initApp() {
+            setupEventListeners();
+            updateInterface();
+            loadHistory();
+        }
+
+        function setupEventListeners() {
+            // Botón de idioma
+            document.getElementById('languageBtn').addEventListener('click', toggleLanguage);
+            
+            // Botones de ciudades
+            document.querySelectorAll('.city-btn').forEach(btn => {
+                btn.addEventListener('click', () => selectCity(btn));
+            });
+            
+            // Botones de respuesta
+            document.getElementById('yesBtn').addEventListener('click', () => submitAnswer(true));
+            document.getElementById('noBtn').addEventListener('click', () => submitAnswer(false));
+            
+            // Botón de limpiar historial
+            document.getElementById('clearBtn').addEventListener('click', clearHistory);
+            
+            // Enter en el input de nombre
+            document.getElementById('userName').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    // Focus en la primera ciudad disponible
+                    document.querySelector('.city-btn').focus();
+                }
+            });
+        }
+
+        function toggleLanguage() {
+            app.currentLanguage = app.currentLanguage === 'es' ? 'en' : 'es';
+            updateInterface();
+            loadHistory();
+            
+            // Si hay una ciudad seleccionada, actualizar la pregunta
+            if (app.selectedCity) {
+                showQuestion();
+            }
+        }
+
+        function updateInterface() {
+            const t = translations[app.currentLanguage];
+            
+            // Actualizar botón de idioma
+            document.getElementById('languageBtn').textContent = 
+                app.currentLanguage === 'es' ? '🌐 English' : '🌐 Español';
+            
+            // Actualizar textos
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('mainSubtitle').textContent = t.mainSubtitle;
+            document.getElementById('nameLabel').textContent = t.nameLabel;
+            document.getElementById('userName').placeholder = t.namePlaceholder;
+            document.getElementById('cityLabel').textContent = t.cityLabel;
+            document.getElementById('yesBtn').textContent = t.yesBtn;
+            document.getElementById('noBtn').textContent = t.noBtn;
+            document.getElementById('historyTitle').textContent = t.historyTitle;
+            document.getElementById('clearBtn').innerHTML = t.clearBtn;
+            document.getElementById('noHistory').textContent = t.noHistory;
+            
+            // Actualizar nombres de ciudades según el idioma
+            updateCityNames();
+        }
+
+        function updateCityNames() {
+            const cityButtons = document.querySelectorAll('.city-btn');
+            const cityNames = {
+                es: {
+                    'nueva york': 'Nueva York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasilia'
+                },
+                en: {
+                    'nueva york': 'New York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasília'
+                }
+            };
+            
+            cityButtons.forEach(btn => {
+                const cityKey = btn.dataset.city;
+                btn.textContent = cityNames[app.currentLanguage][cityKey];
+            });
+        }
+
+        function selectCity(button) {
+            const userName = document.getElementById('userName').value.trim();
+            
+            if (!userName) {
+                alert(translations[app.currentLanguage].fillName);
+                document.getElementById('userName').focus();
+                return;
+            }
+            
+            // Limpiar selección anterior
+            document.querySelectorAll('.city-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva ciudad
+            button.classList.add('selected');
+            app.selectedCity = button.dataset.city;
+            app.selectedCountry = button.dataset.country;
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const t = translations[app.currentLanguage];
+            const cityInfo = cityCountryMap[app.selectedCity];
+            const countryName = cityInfo.names[app.currentLanguage];
+            
+            // Obtener nombre de la ciudad en el idioma actual
+            const cityNames = {
+                es: {
+                    'nueva york': 'Nueva York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasilia'
+                },
+                en: {
+                    'nueva york': 'New York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasília'
+                }
+            };
+            
+            const cityName = cityNames[app.currentLanguage][app.selectedCity];
+            
+            const questionText = t.questionTemplate
+                .replace('{city}', cityName)
+                .replace('{country}', countryName);
+            
+            document.getElementById('questionText').textContent = questionText;
+            document.getElementById('questionDisplay').classList.add('show');
+            document.getElementById('questionDisplay').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function submitAnswer(userAnswer) {
+            const userName = document.getElementById('userName').value.trim();
+            const t = translations[app.currentLanguage];
+            const cityInfo = cityCountryMap[app.selectedCity];
+            const countryName = cityInfo.names[app.currentLanguage];
+            
+            // La respuesta correcta siempre es "Sí" porque todas las ciudades están en sus países correctos
+            const isCorrect = userAnswer === true;
+            
+            showResult(userName, isCorrect, countryName, cityInfo.countryCode);
+            saveToHistory(userName, app.selectedCity, countryName, userAnswer, isCorrect);
+            
+            // Limpiar selección
+            document.querySelectorAll('.city-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            app.selectedCity = null;
+            app.selectedCountry = null;
+            document.getElementById('questionDisplay').classList.remove('show');
+        }
+
+        function showResult(userName, isCorrect, countryName, countryCode) {
+            const t = translations[app.currentLanguage];
+            const cityNames = {
+                es: {
+                    'nueva york': 'Nueva York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasilia'
+                },
+                en: {
+                    'nueva york': 'New York',
+                    'bogotá': 'Bogotá',
+                    'ontario': 'Ontario',
+                    'quito': 'Quito',
+                    'madrid': 'Madrid',
+                    'buenos aires': 'Buenos Aires',
+                    'monterrey': 'Monterrey',
+                    'brasilia': 'Brasília'
+                }
+            };
+            
+            const cityName = cityNames[app.currentLanguage][app.selectedCity];
+            
+            const resultDiv = document.getElementById('result');
+            const titleElement = document.getElementById('resultTitle');
+            const textElement = document.getElementById('resultText');
+            const flagElement = document.getElementById('flagImg');
+            
+            // Configurar resultado
+            resultDiv.className = 'result show';
+            if (!isCorrect) {
+                resultDiv.classList.add('wrong');
+            }
+            
+            titleElement.textContent = isCorrect ? t.correctTitle : t.wrongTitle;
+            titleElement.className = isCorrect ? 'correct' : 'wrong';
+            
+            const resultText = isCorrect ? t.correctText : t.wrongText;
+            textElement.textContent = resultText
+                .replace('{name}', userName)
+                .replace('{city}', cityName)
+                .replace('{country}', countryName);
+            textElement.className = isCorrect ? 'correct' : 'wrong';
+            
+            flagElement.src = `https://flagcdn.com/w160/${countryCode}.png`;
+            flagElement.alt = `${t.flagAlt} ${countryName}`;
+            
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function saveToHistory(userName, city, country, userAnswer, isCorrect) {
+            const conversation = {
+                id: Date.now(),
+                date: new Date().toLocaleString(),
+                userName,
+                city,
+                country,
+                userAnswer,
+                isCorrect,
+                language: app.currentLanguage,
+                countryCode: cityCountryMap[city].countryCode
+            };
+            
+            app.conversations.unshift(conversation);
+            localStorage.setItem('country_quiz_history', JSON.stringify(app.conversations));
+            loadHistory();
+        }
+
+        function loadHistory() {
+            const historyContent = document.getElementById('historyContent');
+            const t = translations[app.currentLanguage];
+            
+            if (app.conversations.length === 0) {
+                historyContent.innerHTML = `<div class="no-history">${t.noHistory}</div>`;
+                return;
+            }
+            
+            historyContent.innerHTML = app.conversations.map(conv => {
+                const flagUrl = `https://flagcdn.com/w160/${conv.countryCode}.png`;
+                const resultClass = conv.isCorrect ? 'correct' : 'wrong';
+                const resultText = conv.isCorrect ? t.correct : t.wrong;
+                const answerText = conv.userAnswer ? t.yesBtn : t.noBtn;
+                
+                // Obtener nombres en el idioma actual
+                const cityNames = {
+                    es: {
+                        'nueva york': 'Nueva York',
+                        'bogotá': 'Bogotá',
+                        'ontario': 'Ontario',
+                        'quito': 'Quito',
+                        'madrid': 'Madrid',
+                        'buenos aires': 'Buenos Aires',
+                        'monterrey': 'Monterrey',
+                        'brasilia': 'Brasilia'
+                    },
+                    en: {
+                        'nueva york': 'New York',
+                        'bogotá': 'Bogotá',
+                        'ontario': 'Ontario',
+                        'quito': 'Quito',
+                        'madrid': 'Madrid',
+                        'buenos aires': 'Buenos Aires',
+                        'monterrey': 'Monterrey',
+                        'brasilia': 'Brasília'
+                    }
+                };
+                
+                const cityName = cityNames[app.currentLanguage][conv.city];
+                const countryInfo = cityCountryMap[conv.city];
+                const countryName = countryInfo.names[app.currentLanguage];
+                
+                return `
+                    <div class="history-item">
+                        <img class="history-flag" src="${flagUrl}" alt="${t.flagAlt} ${countryName}">
+                        <div class="history-content">
+                            <div class="history-date">${conv.date}</div>
+                            <div class="history-text">${conv.userName}: ${cityName} → ${countryName} (${answerText})</div>
+                        </div>
+                        <div class="history-result ${resultClass}">${resultText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearHistory() {
+            const t = translations[app.currentLanguage];
+            
+            if (confirm(t.confirmClear)) {
+                app.conversations = [];
+                localStorage.removeItem('country_quiz_history');
+                loadHistory();
+                alert(t.historyCleared);
+            }
+        }
+
+        // Inicializar aplicación cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
